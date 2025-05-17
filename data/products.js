@@ -55,7 +55,29 @@ class Clothing extends Product{
   }
 }
 
-export const products = [
+export let products = [];
+
+export function loadProducts(fun){
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load',()=>{
+    products = JSON.parse(xhr.response).map((productDetails)=>{
+      if(productDetails.type === 'clothing'){
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);
+    });
+
+    console.log("load products");
+    fun();
+  });
+  xhr.open('GET','https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
+
+/*export const products = [
+
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -721,3 +743,42 @@ export const products = [
   }
   return new Product(productDetails);
 });
+
+/*
+
+const date = new Date();
+
+console.log(date);
+console.log(date.toLocaleTimeString());
+
+console.log(this); //undefined
+
+const object2 = { // Type Error
+  a: 2,
+  b: this.a
+};
+
+
+function logThis(){
+  console.log(this);
+}
+
+logThis();
+logThis.call('heello');
+
+const obj3 = {
+  method: ()=>{
+    console.log(this);
+  }
+}
+
+obj3.method(); //undefined значение будет как значение за пределами стрелочной функции
+
+*/
+
+
+/*
+  1. inside a method, 'this' points to the outer object
+  2. inside a function, 'this' = undefined, but can be changed using call()
+  3. arrow functions do not change the value of 'this' 
+*/
